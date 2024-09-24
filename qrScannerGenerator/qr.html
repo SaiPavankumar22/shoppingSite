@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #qr-video {
+            margin-top: 20px;
+            width: 300px;
+            height: 200px;
+        }
+
+        #qr-result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Scanner</h1>
+        <button id="scan-btn">Open Scanner</button>
+        <video id="qr-video"></video>
+        <p id="qr-result">No QR code detected</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest/umd/index.min.js"></script>
+    <script>
+        document.getElementById('scan-btn').addEventListener('click', function () {
+            const codeReader = new ZXing.BrowserQRCodeReader();
+            const video = document.getElementById('qr-video');
+            const result = document.getElementById('qr-result');
+
+            codeReader.decodeFromVideoDevice(null, video, (result, err) => {
+                if (result) {
+                    console.log(result);
+                    document.getElementById('qr-result').innerText = `QR Code Message: ${result.text}`;
+                } else {
+                    document.getElementById('qr-result').innerText = "No QR code detected";
+                }
+            }).catch(err => {
+                console.error(err);
+            });
+
+            window.addEventListener("beforeunload", () => {
+                codeReader.reset();
+            });
+        });
+    </script>
+</body>
+</html>

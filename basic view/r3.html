@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #004d40;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: #004d40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .profile-info {
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .profile-info label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .profile-info input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .profile-info button {
+            margin-top: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .profile-info button:hover {
+            background-color: #45a049;
+        }
+        .logout-btn {
+            background-color: #f44336;
+        }
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background-color: #004d40;
+            padding: 10px 0;
+        }
+        .tabs div {
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+        }
+        .tabs div.active {
+            background-color: #00332a;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            overflow: auto;
+            flex: 1;
+        }
+        .content.active {
+            display: block;
+        }
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .wishlist-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .wishlist-item-details {
+            text-align: left;
+        }
+        .wishlist-item-details h4 {
+            margin: 0;
+            font-size: 1em;
+        }
+        .wishlist-item-details p {
+            margin: 5px 0 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+                max-height: 100%;
+                border-radius: 0;
+            }
+            .profile-info {
+                padding: 10px;
+            }
+            .profile-info label {
+                margin-top: 5px;
+            }
+            .profile-info input {
+                padding: 8px;
+            }
+            .profile-info button {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="profile.jpg" alt="Profile Picture">
+            <h2>Jo March</h2>
+            <p>Female, Karnal, India</p>
+        </div>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('account')">Account</div>
+            <div class="tab" onclick="showTab('orders')">Notifications</div>
+            <div class="tab" onclick="showTab('lists')">My Lists</div>
+            <div class="tab" onclick="showTab('offers')">Offers</div>
+        </div>
+        <div class="content active" id="account">
+            <div class="profile-info">
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" value="john.doe@example.com" readonly>
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" value="9999999999" readonly>
+                <button class="logout-btn">Change Password</button>
+                <button class="logout-btn">Logout</button>
+            </div>
+        </div>
+        <div class="content" id="orders">
+            <div class="profile-info">
+                <h3>Notifications</h3>
+                <p> #1: H&M Women's Yellow T-Shirt - 299.00 INR - Shipped</p>
+                <p> #2: H&M Women's White Dress - 999.00 INR - Delivered</p>
+                <p> #3: Mango Women's Black Jacket - 2799.00 INR - Cancelled</p>
+            </div>
+        </div>
+        <div class="content" id="lists">
+            <div class="profile-info">
+                <h3>My orders</h3>
+                <div class="wishlist-item" onclick="openModal('WomenPartyWear')">
+                    <img src="party-wear.jpg" alt="Women's Party Wear">
+                    <div class="wishlist-item-details">
+                        <h4>Women's Party Wear</h4>
+                        <p>Elegant and stylish party wear for women.</p>
+                    </div>
+                </div>
+                <div class="wishlist-item" onclick="openModal('BabyClothes')">
+                    <img src="baby-clothes.jpg" alt="Baby Clothes">
+                    <div class="wishlist-item-details">
+                        <h4>Baby Clothes</h4>
+                        <p>Comfortable and cute clothes for babies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content" id="offers">
+            <div class="profile-info">
+                <h3>Offers</h3>
+                <p>e-Gift Card: 2999.00 INR</p>
+                <p>Credits: 388.00 pts</p>
+                <p>Coupons: Buy 1 at MRP, 2 at 50% off - Code: BUY2ATS50</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Order Details -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Order Details</h3>
+            <p id="orderStatus"></p>
+            <div id="paymentDetails" style="display: none;">
+                <h4>Payment Details</h4>
+                <ul>
+                    <li id="cost"></li>
+                    <li id="tax"></li>
+                    <li id="totalPrice"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            var tabs = document.querySelectorAll('.tab');
+            var contents = document.querySelectorAll('.content');
+
+            tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+
+            contents.forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            document.querySelector('.tab[onclick="showTab(\'' + tabId + '\')"]').classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function openModal(itemName) {
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'block';
+
+            var orderStatus = document.getElementById('orderStatus');
+            var paymentDetails = document.getElementById('paymentDetails');
+            var cost = document.getElementById('cost');
+            var tax = document.getElementById('tax');
+            var totalPrice = document.getElementById('totalPrice');
+
+            // Example logic to determine order status and payment details
+            if (itemName === 'WomenPartyWear') {
+                orderStatus.textContent = 'Order Completed';
+                paymentDetails.style.display = 'block';
+                cost.textContent = 'Cost: 299.00 INR';
+                tax.textContent = 'Tax: 0.00 INR';
+                totalPrice.textContent = 'Total Price: 299.00 INR';
+            } else if (itemName === 'BabyClothes') {
+                orderStatus.textContent = 'Order In Progress';
+                paymentDetails.style.display = 'none'; // Hide payment details for in-progress orders
+            }
+        }
+
+        function closeModal() {
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal if user clicks outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
